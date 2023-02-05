@@ -16,6 +16,9 @@ iframe {
 }
 `;
 
+/** @type {Record<string, Promise<string>>} */
+const viewerHtmlCache = {};
+
 /** @param {HTMLElement} ctx */
 async function render(ctx) {
   const iframe = document.createElement("iframe");
@@ -26,8 +29,11 @@ async function render(ctx) {
   }
   const fileUrl = new URL(file, location.href);
 
-  const res = await fetch(EmbedPdf.viewerUrl);
-  const text = await res.text();
+  viewerHtmlCache[EmbedPdf.viewerUrl] ??= (async () => {
+    const res = await fetch(EmbedPdf.viewerUrl);
+    return await res.text();
+  })();
+  const text = await viewerHtmlCache[EmbedPdf.viewerUrl];
   // inject script tag
   const html = text
     .replace(
