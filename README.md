@@ -2,40 +2,6 @@
 
 `embed-pdf` is a WebComponent for embedding PDF files in web pages using pdf.js.
 
-## Usage
-
-First, insert a script tag into your HTML. Next, place the `<embed-pdf>` tag.
-Finally, set the file path in the src attribute of the `<embed-pdf>` tag.
-
-```html
-<script src="https://deno.land/x/embed_pdf@$MODULE_VERSION/mod.js" type="module"></script>
-<embed-pdf src="./path/to/file.pdf"></embed-pdf>
-```
-
-![screenshot](./_tools/screenshot.png)
-
-By default, this library uses pdf.js in the vendor directory to render PDFs.
-Alternatively, to use the latest version of pdf.js directly from the official
-site, set it using JavaScript as follows:
-
-```js
-import { EmbedPdf } from "https://deno.land/x/embed_pdf@$MODULE_VERSION/mod.js";
-
-// Specify the path to viewer.html. The default URL is https://deno.land/x/embed_pdf@$MODULE_VERSION/vendor/pdfjs/web/viewer.html .
-EmbedPdf.viewerUrl = "https://mozilla.github.io/pdf.js/web/viewer.html";
-```
-
-## styling
-
-You can specify width and height using CSS.
-
-```css
-embed-pdf {
-  width: 500px; /* default is 300px. */
-  height: 250px; /* default is 150px. */
-}
-```
-
 ## why did you make this?
 
 Embedding PDFs on mobile devices is a bit of a pain, as indicated in the
@@ -54,3 +20,37 @@ Embedding PDFs on mobile devices is a bit of a pain, as indicated in the
 **This library provides a WebComponent that is delivered by a CDN and can be
 activated by inserting a single line of script tag.** This library greatly
 simplified the process of embedding PDFs in HTML.
+
+## Usage
+
+First, insert a script tag into your HTML. Next, place the `<embed-pdf>` tag.
+Finally, set the file path in the `src` attribute of the `<embed-pdf>` tag.
+
+```html
+<script src="https://deno.land/x/embed_pdf@$MODULE_VERSION/mod.js" type="module"></script>
+<embed-pdf src="./path/to/file.pdf"></embed-pdf>
+```
+
+![screenshot](./_tools/screenshot.png)
+
+By default, this library uses pdf.js in the [vendor directory](./vendor/) to
+render PDFs. Alternatively, to use the latest version of pdf.js directly from
+the official site, set it using JavaScript as follows:
+
+```js
+import { EmbedPdf } from "https://deno.land/x/embed_pdf@$MODULE_VERSION/mod.js";
+
+// Specify the path to viewer.html. The default URL is https://deno.land/x/embed_pdf@$MODULE_VERSION/vendor/pdfjs/web/viewer.html .
+EmbedPdf.viewerUrl = "https://mozilla.github.io/pdf.js/web/viewer.html";
+```
+
+## styling
+
+You can specify width and height using CSS.
+
+```css
+embed-pdf {
+  width: 500px; /* default is 300px. */
+  height: 250px; /* default is 150px. */
+}
+```
