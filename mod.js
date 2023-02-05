@@ -48,15 +48,25 @@ async function render(ctx) {
 }
 
 /**
+ * First, insert a script tag into your HTML. Next, place the `<embed-pdf>` tag.
+ * Finally, set the file path in the src attribute of the `<embed-pdf>` tag.
+ *
  * ```html
- * <script src="https://deno.land/x/embed_pdf/mod.js" type="module"></script>
+ * <script src="https://deno.land/x/embed_pdf@$MODULE_VERSION/mod.js" type="module"></script>
  * <embed-pdf src="./path/to/file.pdf"></embed-pdf>
  * ```
  *
- * ```ts
- * import { EmbedPdf } from "https://deno.land/x/embed_pdf/mod.js";
+ * ![screenshot](./_tools/screenshot.png)
  *
- * EmbedPdf.viewerUrl = "https://mozilla.github.io/pdf.js/web/viewer.html";
+ * By default, this library uses pdf.js in the vendor directory to render PDFs.
+ * Alternatively, to use the latest version of pdf.js directly from the official
+ * site, set it using JavaScript as follows:
+ *
+ * ```js
+ * import { EmbedPdf } from "https://deno.land/x/embed_pdf@$MODULE_VERSION/mod.js";
+ *
+ * // Specify the path to viewer.html. The default URL is https://deno.land/x/embed_pdf@$MODULE_VERSION/vendor/pdfjs/web/viewer.html .
+EmbedPdf.viewerUrl = "https://mozilla.github.io/pdf.js/web/viewer.html";
  * ```
  */
 export class EmbedPdf extends HTMLElement {
