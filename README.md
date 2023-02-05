@@ -2,6 +2,9 @@
 
 `embed-pdf` is a WebComponent for embedding PDF files in web pages using pdf.js.
 
+- [library](https://deno.land/x/embed_pdf)
+- [document](https://deno.land/x/embed_pdf/mod.js?s=EmbedPdf)
+
 ## why did you make this?
 
 Embedding PDFs on mobile devices is a bit of a pain, as indicated in the

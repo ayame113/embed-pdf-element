@@ -49,6 +49,8 @@ async function render(ctx) {
 }
 
 /**
+ * An HTML element that can embed a pdf file.
+ *
  * First, insert a script tag into your HTML. Next, place the `<embed-pdf>` tag.
  * Finally, set the file path in the src attribute of the `<embed-pdf>` tag.
  *
