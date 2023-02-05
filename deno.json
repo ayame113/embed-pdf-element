@@ -1,6 +1,19 @@
 {
   "tasks": {
-    "download": "deno run --allow-net=github.com,objects.githubusercontent.com --allow-read=./vendor/ --allow-write=./vendor/ ./_tools/download.ts"
+    "download": "deno run --allow-net=github.com,objects.githubusercontent.com --allow-read=./vendor/ --allow-write=./vendor/ ./_tools/download.ts",
+    "test:lint": "deno lint",
+    "test:fmt": "deno fmt --check",
+    "check": "deno check ./mod.js"
+  },
+  "lint": {
+    "files": {
+      "exclude": ["./vendor"]
+    }
+  },
+  "fmt": {
+    "files": {
+      "exclude": ["./vendor"]
+    }
   },
   "lock": false
 }
