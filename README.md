@@ -18,8 +18,8 @@ Embedding PDFs on mobile devices is a bit of a pain, as indicated in the
   old WebComponent specification.
 
 **This library provides a WebComponent that is delivered by a CDN and can be
-activated by inserting a single line of script tag.** It also uses pdf.js
-internally to allow embedding of PDFs on both PC and mobile devices. This
+activated by inserting a single line of script tag. It also uses pdf.js
+internally to allow embedding of PDFs on both PC and mobile devices.** This
 library greatly simplified the process of embedding PDFs in HTML.
 
 ## Usage
