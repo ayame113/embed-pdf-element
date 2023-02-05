@@ -32,14 +32,14 @@ async function render(ctx) {
   const html = text
     .replace(
       '<meta charset="utf-8">',
+      // Sets the base path for assets loaded with relative paths from within viewer.html.
       `<meta charset="utf-8"><base href="${EmbedPdf.viewerUrl}">`,
     )
     .replace(
       '<script src="viewer.js"></script>',
+      // Tells pdf.js which file to load. See also https://github.com/ayame113/embed-pdf-element/issues/1 .
       `<script src="viewer.js"></script>
-      <script>
-        PDFViewerApplicationOptions.set("defaultUrl", "${fileUrl}")
-      </script>`,
+      <script>PDFViewerApplicationOptions.set("defaultUrl", "${fileUrl}");</script>`,
     );
 
   const blob = new Blob([html], { type: "text/html" });
