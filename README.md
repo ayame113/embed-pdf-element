@@ -53,5 +53,6 @@ You can specify width and height using CSS.
 embed-pdf {
   width: 500px; /* default is 300px. */
   height: 250px; /* default is 150px. */
+  margin: 0 auto;
 }
 ```
