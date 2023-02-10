@@ -36,10 +36,14 @@ Finally, set the file path in the `src` attribute of the `<embed-pdf>` tag.
 <embed-pdf src="./path/to/file.pdf"></embed-pdf>
 ```
 
-![screenshot](./_tools/screenshot.png)
+By default, this library uses the browser's built-in PDF embedding support to
+display PDFs. Switch to rendering using pdf.js only if the built-in PDF
+rendering is not available. This will keep the download size to a minimum.
 
-If you want to see how this works in action, check out the
+If you want to see how this works, check out the
 [demo page](https://embed-pdf-element-demo.deno.dev/_tools/test.html)!
+
+![screenshot](./_tools/screenshot.png)
 
 By default, this library uses pdf.js in the [vendor directory](./vendor/) to
 render PDFs. Alternatively, to use the latest version of pdf.js directly from
