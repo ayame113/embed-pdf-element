@@ -4,6 +4,7 @@
 
 - [library](https://deno.land/x/embed_pdf)
 - [document](https://deno.land/x/embed_pdf/mod.js?s=EmbedPdf)
+- [demo](https://embed-pdf-element-demo.deno.dev/_tools/test.html)
 
 ## why did you make this?
 
@@ -36,6 +37,9 @@ Finally, set the file path in the `src` attribute of the `<embed-pdf>` tag.
 ```
 
 ![screenshot](./_tools/screenshot.png)
+
+If you want to see how this works in action, check out the
+[demo page](https://embed-pdf-element-demo.deno.dev/_tools/test.html)!
 
 By default, this library uses pdf.js in the [vendor directory](./vendor/) to
 render PDFs. Alternatively, to use the latest version of pdf.js directly from
