@@ -16,6 +16,31 @@ iframe {
   height: 100%;
   border: none;
 }
+.download-link {
+  width: 100%;
+  height: 100%;
+  background-color: #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.download-link a {
+  background-color: royalblue;
+  color: white;
+  border-radius: 0.5em;
+  padding: 0.5em;
+  text-decoration: none;
+  line-height: 100%;
+}
+.download-link a:hover {
+  background-color: dodgerblue;
+}
+.download-link a:after {
+  content: "💾";
+  font-size: 1.2em;
+  mergin: 0.2em;
+  filter: brightness(2);
+}
 `;
 
 /** @type {Record<string, Promise<string>>} */
@@ -25,35 +50,71 @@ const viewerHtmlCache = {};
 async function render(ctx) {
   const iframe = document.createElement("iframe");
 
-  const file = ctx.getAttribute("src");
-  if (!file) {
+  const fileSrc = ctx.getAttribute("src");
+  if (!fileSrc) {
     throw new Error("plese set `src` attribute to <embed-pdf> element.");
   }
-  const fileUrl = new URL(file, location.href);
 
-  viewerHtmlCache[EmbedPdf.viewerUrl] ??= (async () => {
-    const res = await fetch(EmbedPdf.viewerUrl);
-    return await res.text();
-  })();
-  const text = await viewerHtmlCache[EmbedPdf.viewerUrl];
-  // inject script tag
-  const html = text
-    .replace(
-      '<meta charset="utf-8">',
-      // Sets the base path for assets loaded with relative paths from within viewer.html.
-      `<meta charset="utf-8"><base href="${EmbedPdf.viewerUrl}">`,
-    )
-    .replace(
-      '<script src="viewer.js"></script>',
-      // Tells pdf.js which file to load. See also https://github.com/ayame113/embed-pdf-element/issues/1 .
-      `<script src="viewer.js"></script>
-      <script>PDFViewerApplicationOptions.set("defaultUrl", "${fileUrl}");</script>`,
-    );
+  if (globalThis.navigator?.pdfViewerEnabled) {
+    // use native iframe support
+    iframe.src = fileSrc;
+    return iframe;
+  }
 
-  const blob = new Blob([html], { type: "text/html" });
-  iframe.src = URL.createObjectURL(blob);
+  try {
+    const fileUrl = new URL(fileSrc, location.href);
 
-  return iframe;
+    // cache pdfjs content
+    viewerHtmlCache[EmbedPdf.viewerUrl] ??= (async () => {
+      const res = await fetch(EmbedPdf.viewerUrl);
+      return await res.text();
+    })();
+    const text = await viewerHtmlCache[EmbedPdf.viewerUrl];
+
+    // inject script tag
+    const html = text
+      .replace(
+        '<meta charset="utf-8">',
+        // Sets the base path for assets loaded with relative paths from within viewer.html.
+        `<meta charset="utf-8"><base href="${EmbedPdf.viewerUrl}">`,
+      )
+      .replace(
+        '<script src="viewer.js"></script>',
+        // Tells pdf.js which file to load. See also https://github.com/ayame113/embed-pdf-element/issues/1 .
+        `<script src="viewer.js"></script>
+        <script>PDFViewerApplicationOptions.set("defaultUrl", "${fileUrl}");</script>`,
+      );
+
+    const blob = new Blob([html], { type: "text/html" });
+    iframe.src = URL.createObjectURL(blob);
+
+    // show download link when loading error occurs
+    iframe.addEventListener("load", () => {
+      iframe.contentWindow?.addEventListener("unhandledrejection", () => {
+        iframe.parentNode?.append(renderDownloadLink(fileSrc));
+        iframe.remove();
+      });
+    });
+
+    return iframe;
+  } catch (error) {
+    console.error(error);
+
+    return renderDownloadLink(fileSrc);
+  }
+}
+
+/** @param {string} fileSrc */
+function renderDownloadLink(fileSrc) {
+  // if error, show download link.
+  const wrapper = document.createElement("div");
+  const downloadLink = document.createElement("a");
+  downloadLink.href = fileSrc;
+  downloadLink.target = "_brank";
+  downloadLink.textContent = "Download PDF ";
+  wrapper.append(downloadLink);
+  wrapper.classList.add("download-link");
+  return wrapper;
 }
 
 /**
