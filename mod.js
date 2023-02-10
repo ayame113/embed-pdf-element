@@ -10,6 +10,7 @@ const style = `
   display: block;
   width: 300px;
   height: 150px;
+  background-color: #ddd;
 }
 iframe {
   width: 100%;
@@ -19,7 +20,6 @@ iframe {
 .download-link {
   width: 100%;
   height: 100%;
-  background-color: #ddd;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -28,14 +28,14 @@ iframe {
   background-color: royalblue;
   color: white;
   border-radius: 0.5em;
-  padding: 0.5em;
+  padding: 1em;
   text-decoration: none;
   line-height: 100%;
 }
 .download-link a:hover {
   background-color: dodgerblue;
 }
-.download-link a:after {
+.download-link a::after {
   content: "💾";
   font-size: 1.2em;
   mergin: 0.2em;
@@ -46,11 +46,10 @@ iframe {
 /** @type {Record<string, Promise<string>>} */
 const viewerHtmlCache = {};
 
-/** @param {HTMLElement} ctx */
-async function render(ctx) {
+/** @param {{ src: string | null }} options */
+async function render({ src: fileSrc }) {
   const iframe = document.createElement("iframe");
 
-  const fileSrc = ctx.getAttribute("src");
   if (!fileSrc) {
     throw new Error("plese set `src` attribute to <embed-pdf> element.");
   }
@@ -144,7 +143,9 @@ EmbedPdf.viewerUrl = "https://mozilla.github.io/pdf.js/web/viewer.html";
 export class EmbedPdf extends HTMLElement {
   static viewerUrl = new URL("./vendor/pdfjs/web/viewer.html", import.meta.url)
     .toString();
+  static observedAttributes = ["src"];
   #shadowRoot;
+  #isConnected = false;
   constructor() {
     super();
     this.#shadowRoot = this.attachShadow({ mode: "closed" });
@@ -153,10 +154,27 @@ export class EmbedPdf extends HTMLElement {
     this.#shadowRoot.adoptedStyleSheets = [styleSheet];
   }
   async connectedCallback() {
-    this.#shadowRoot.append(await render(this));
+    this.#shadowRoot.replaceChildren(
+      await render({ src: this.getAttribute("src") }),
+    );
+    this.#isConnected = true;
   }
   disconnectedCallback() {
-    this.#shadowRoot.innerHTML = "";
+    this.#isConnected = false;
+    this.#shadowRoot.replaceChildren();
+  }
+  /**
+   * @param {string} name
+   * @param {string | null} _oldValue
+   * @param {string | null} newValue
+   */
+  async attributeChangedCallback(name, _oldValue, newValue) {
+    if (!this.#isConnected) {
+      return;
+    }
+    if (name === "src") {
+      this.#shadowRoot.replaceChildren(await render({ src: newValue }));
+    }
   }
 }
 customElements.define("embed-pdf", EmbedPdf);
