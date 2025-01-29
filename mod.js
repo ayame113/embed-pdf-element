@@ -54,7 +54,7 @@ async function render({ src: fileSrc }) {
     throw new Error("plese set `src` attribute to <embed-pdf> element.");
   }
 
-  if (globalThis.navigator?.pdfViewerEnabled) {
+  if (globalThis.navigator?.pdfViewerEnabled && !(/iPad|iPhone|iPod/.test(navigator.userAgent)) ) {
     // use native iframe support
     iframe.src = fileSrc;
     return iframe;
